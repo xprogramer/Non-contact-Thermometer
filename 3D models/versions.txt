@@ -1,1 +1,3 @@
-
+# Version 1.0
+---------------
+The right hole is designed for VL53L0X sensor, and it is recommended to remove the cylinders to avoid any noise. It is the same thing for the MLX90614 sensor. The major limit of this design is the push button, where I did not take into consideration the electronic part of the push button (embedding the mini push button in the 3D model). It is highly recommended to make a small margin of +1 -1 mm in the design (holes) to overcome the 3D printing errors.
