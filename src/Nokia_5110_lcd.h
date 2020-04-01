@@ -1,0 +1,205 @@
+#ifndef NOKIA_5110_LCD_H
+#define NOKIA_5110_LCD_H
+
+#define LCD_CLK 3
+#define LCD_SDA 4
+#define LCD_DC 5
+#define LCD_SCE 6
+#define LCD_RST 7
+
+void sendCmd(byte _val) {
+   digitalWrite(LCD_DC,0);
+   digitalWrite(LCD_SCE, LOW);
+   for(int i=7; i>=0; i--) {
+      digitalWrite(LCD_CLK, LOW);
+	    digitalWrite(LCD_SDA, bitRead(_val, i));
+      digitalWrite(LCD_CLK, HIGH);
+   }
+   digitalWrite(LCD_SCE, HIGH);
+}
+
+void sendData(byte _val) {
+   digitalWrite(LCD_DC,1);
+   digitalWrite(LCD_SCE, LOW);
+   for(int i=7; i>=0; i--) {
+      digitalWrite(LCD_CLK, LOW);
+      digitalWrite(LCD_SDA, bitRead(_val, i));
+      digitalWrite(LCD_CLK, HIGH);
+   }
+   digitalWrite(LCD_SCE, HIGH);
+}
+
+void setCursor(byte column, byte line) {
+    sendCmd(0x80 | column);
+    sendCmd(0x40 | line);
+}
+
+void clear() {
+  setCursor(0, 0);
+  for (unsigned short i = 0; i < 580; i++)
+    sendData(0x00);
+  setCursor(0, 0);
+}
+
+void LCD_setup() {
+	pinMode(LCD_CLK,OUTPUT);
+	pinMode(LCD_SDA,OUTPUT);
+	pinMode(LCD_DC,OUTPUT);
+	pinMode(LCD_RST,OUTPUT);
+	pinMode(LCD_SCE,OUTPUT);
+	
+	digitalWrite(LCD_RST,HIGH);
+	digitalWrite(LCD_SCE,HIGH);
+	digitalWrite(LCD_RST,LOW);
+	delay(100);
+	digitalWrite(LCD_RST,HIGH);
+	
+	// Set the LCD parameters...
+	sendCmd(0x21); // extended instruction set control (H=1)
+	sendCmd(0x13); // bias system (1:48)
+	sendCmd(0xc2);  // default Vop (3.06 + 66 * 0.06 = 7V)
+	sendCmd(0x20); // extended instruction set control (H=0)
+	sendCmd(0x09); // all display segments on
+	// Clear the screen
+  clear();
+	// Activate LCD...
+	//sendCmd(0x08); // display blank
+	sendCmd(0x0c); // normal mode (0x0d = inverse mode)
+  delay(100);
+  sendCmd(0x80);
+  sendCmd(0x40);
+}
+
+void printChar(byte b1,byte b2,byte b3,byte b4,byte b5) {
+	sendData(b1);
+	sendData(b2);
+	sendData(b3);
+	sendData(b4);
+	sendData(b5);
+	sendData(0x00);
+}
+
+void printChar2(byte b1,byte b2,byte b3,byte b4,byte b5,byte b6,byte b7,byte b8,byte b9,byte b10) {
+  sendData(b1);
+  sendData(b2);
+  sendData(b3);
+  sendData(b4);
+  sendData(b5);
+  sendData(b6);
+  sendData(b7);
+  sendData(b8);
+  sendData(b9);
+  sendData(b10);
+  sendData(0x00);
+  sendData(0x00);
+}
+
+void printSimpleNumber(byte num) {
+  switch(num) {
+    case 0:
+      printChar(0x3e, 0x51, 0x49, 0x45, 0x3e);
+      break;
+    case 1:
+      printChar(0x00, 0x42, 0x7f, 0x40, 0x00);
+      break;
+    case 2:
+      printChar(0x42, 0x61, 0x51, 0x49, 0x46);
+      break;
+    case 3:
+      printChar(0x21, 0x41, 0x45, 0x4b, 0x31);
+      break;
+    case 4:
+      printChar(0x18, 0x14, 0x12, 0x7f, 0x10);
+      break;
+    case 5:
+      printChar(0x27, 0x45, 0x45, 0x45, 0x39);
+      break;
+    case 6:
+      printChar(0x3c, 0x4a, 0x49, 0x49, 0x30);
+      break;
+    case 7:
+      printChar(0x01, 0x71, 0x09, 0x05, 0x03);
+      break;
+    case 8:
+      printChar(0x36, 0x49, 0x49, 0x49, 0x36);
+      break;
+    case 9:
+      printChar(0x06, 0x49, 0x49, 0x29, 0x1e);
+      break;
+  }
+}
+
+void printGrandNumber(byte num, byte column=0, byte line=0) {
+  if(num == 0)
+  {
+    setCursor(column, line);
+    printChar2(0xfc, 0xfc, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0xfc, 0xfc);
+    setCursor(column, line+1);
+    printChar2(0x3f, 0x3f, 0xc0, 0xc0, 0xc0, 0xc0, 0xc0, 0xc0, 0x3f, 0x3f);
+  }
+  if(num == 1)
+  {
+    setCursor(column, line);
+    printChar2(0x00, 0x00, 0x0C, 0x0C, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00);
+    setCursor(column, line+1);
+    printChar2(0x00, 0x00, 0xC0, 0xC0, 0xff, 0xff, 0xC0, 0xC0, 0x00, 0x00);
+  }
+  if(num == 2)
+  {
+    setCursor(column, line);
+    printChar2(0x0c, 0x0e, 0x07, 0x03, 0x03, 0x03, 0x83, 0xc7, 0x7e, 0x3c);
+    setCursor(column, line+1);
+    printChar2(0xf0, 0xfc, 0xde, 0xc6, 0xc7, 0xc3, 0xc3, 0xc1, 0xc0, 0xc0);
+  }
+  if(num == 3)
+  {
+    setCursor(column, line);
+    printChar2(0x00, 0x00, 0x83, 0x83, 0x83, 0x83, 0x83, 0x83, 0x7c, 0x7c);
+    setCursor(column, line+1);
+    printChar2(0x00, 0x00, 0xc1, 0xc1, 0xc1, 0xc1, 0xc1, 0xc1, 0x3e, 0x3e);
+  }
+  if(num == 4)
+  {
+    setCursor(column, line);
+    printChar2(0x00, 0xc0, 0xf0, 0x3d, 0xf, 0x03, 0xff, 0xff, 0x00, 0x00);
+    setCursor(column, line+1);
+    printChar2(0x0f, 0x0f, 0x0c, 0x0c, 0x0c, 0x0c, 0xff, 0xff, 0x0c, 0x0c);
+  }
+  if(num == 5)
+  {
+    setCursor(column, line);
+    printChar2(0xff, 0xff, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03);
+    setCursor(column, line+1);
+    printChar2(0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0x63, 0x63, 0x3e, 0x3e);
+  }
+  if(num == 6)
+  {
+    setCursor(column, line);
+    printChar2(0xc0, 0xf0, 0x38, 0x1c, 0x0e, 0x06, 0x03, 0x03, 0x03, 0x00);
+    setCursor(column, line+1);
+    printChar2(0x7f, 0xff, 0xe7, 0xc3, 0xc3, 0xc3, 0xc3, 0xe7, 0x7e, 0x3c);
+  }
+  if(num == 7)
+  {
+    setCursor(column, line);
+    printChar2(0x03, 0x03, 0x03, 0x03, 0xC3, 0xC3, 0x33, 0x33, 0x0f, 0x0f);
+    setCursor(column, line+1);
+    printChar2(0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+  }
+  if(num == 8)
+  {
+    setCursor(column, line);
+    printChar2(0x7c, 0x7c, 0x83, 0x83, 0x83, 0x83, 0x83, 0x83, 0x7c, 0x7c);
+    setCursor(column, line+1);
+    printChar2(0x3e, 0x3e, 0xc1, 0xc1, 0xc1, 0xc1, 0xc1, 0xc1, 0x3e, 0x3e);
+  }
+  if(num == 9)
+  {
+    setCursor(column, line);
+    printChar2(0x3c, 0x7e, 0xe7, 0xc3, 0xc3, 0xc3, 0xc3, 0xe7, 0xfe, 0xfc);
+    setCursor(column, line+1);
+    printChar2(0x00, 0xc0, 0xc0, 0xc0, 0x60, 0x70, 0x38, 0x1c, 0x0f, 0x03);
+  }
+}
+
+#endif
