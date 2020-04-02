@@ -1,16 +1,16 @@
 # Non-contact-Thermometer v1.0
 A low cost non-contact (infrared) Thermometer mainly based on Arduino and MLX90614 infrared temperature sensor
 
-![Infrared Thermometer](https://github.com/xprogramer/Non-contact-Thermometer/blob/master/schema.jpg?raw=true "image description")
+![Infrared Thermometer](https://github.com/xprogramer/Non-contact-Thermometer/blob/master/images/img3.jpg?raw=true "image description")
 
 ![Wiring schema](https://github.com/xprogramer/Non-contact-Thermometer/blob/master/schema.jpg?raw=true "image description")
 
 # Table of contents
-* [Overview] (#overview)
-* [Features] (#features)
-* [Hardware] (#hardware)
-* [Memory] (#memory)
-* [Perspectives] (#perspectives)
+* [Overview](#overview)
+* [Features](#features)
+* [Hardware](#hardware)
+* [Memory](#memory)
+* [Perspectives](#perspectives)
 
 # Overview
 This project is about a non-contact thermometer that measures the object temperatures without touching them. The project is mainly based on Arduino nano, MLX90614 infrared temperature sensor and some other hardwares (check the list below). The whole hardware is embedded within a pistol, and the latter has been printed using a 3D printer. This thermometer includes a pointing laser to figure out the direction of the pistol, and does not point necessarily to the targeted point that we want to measure its temperature.
