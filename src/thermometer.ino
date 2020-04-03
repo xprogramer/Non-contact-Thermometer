@@ -1,7 +1,7 @@
 /**
   Author: x-programer (Abainia Kheireddine)
   Email: k.abainia@gmail.com
-  Non-contact thermometer v1.0
+  Non-contact Thermometer v1.0
 
   This is a low cost non-contact (infrared) thermometer
   based on Arduino. The overall program uses 23k of memory,
@@ -9,8 +9,8 @@
   the program. This project uses Adafruit library for the
   VL53L0X sensor, and this library is expensively consuming 
   (17k of memory). This thermometer also measures the distance
-  of the targeted object, and to this end, a flight of time
-  sensor (VL53L0X) is used and could be changer with impreved
+  of the targeted object, and to this end, a time of flight distance
+  sensor (VL53L0X) is used and could be replaced with its improved
   version (e.g. VL6180X).
 **/
 
